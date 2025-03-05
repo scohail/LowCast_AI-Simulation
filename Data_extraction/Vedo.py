@@ -4,7 +4,7 @@ import pandas as pd
 from vedo import Points, Plotter
 
 # Folder containing CSV files
-folder = "teste"
+folder = "Data_614C"
 
 # Get list of state files
 state_files = sorted([os.path.join(folder, f) for f in os.listdir(folder) if f.endswith(".csv")])
@@ -50,7 +50,7 @@ plt.render()  # Ensures visualization starts immediately
 
 # Add the callback and start the timer
 plt.add_callback("timer", loop_func)
-plt.timer_callback("start", dt=100)  # dt is the delay between frames in milliseconds
+plt.timer_callback("start", dt=4500)  # dt is the delay between frames in milliseconds
 
 # Show the plot
 plt.show("Temperature Evolution", zoom=1.25, elevation=-30, interactive=True)
