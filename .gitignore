@@ -1,0 +1,7 @@
+Procast/
+Data/
+Scaler/
+Models
+Scripts/Model_Train.ipynb
+Scripts/Model_Test.ipynb
+Scripts/EDA.ipynb
