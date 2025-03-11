@@ -3,8 +3,8 @@ import pandas as pd
 import os
 
 # File path
-file_path = "/home/scohail/Desktop/LowCast_AI-Simulation/Procast/th-CorpsBrocheMoule_690.erfh5"
-output_dir = "/home/scohail/Desktop/LowCast_AI-Simulation/Data_690C/"
+file_path = "/home/scohail/Desktop/LowCast_AI-Simulation/Procast/th-CorpsBrocheMoule_622.erfh5"
+output_dir = "/home/scohail/Desktop/LowCast_AI-Simulation/Data/Data_622C/"
 
 # Ensure output directory exists
 os.makedirs(output_dir, exist_ok=True)
