@@ -149,7 +149,6 @@ def display_2D_Error_page():
                 yaxis_title="Y Coordinate",
                 margin=dict(l=50, r=0, b=0, t=40)
             )
-            
             fig_1.update_layout(    
                 coloraxis_colorbar=dict(
                     title="Temp (K)",
@@ -160,7 +159,6 @@ def display_2D_Error_page():
                 yaxis_title="Y Coordinate",
                 margin=dict(l=50, r=0, b=0, t=40)
             )
-
             fig_2.update_layout(
                 coloraxis_colorbar=dict(
                     title="Temp (K)",
@@ -192,8 +190,100 @@ def display_2D_Error_page():
     else :
         st.warning("No error data available for selected parameters")
 def display_prediction_page():
-
     st.header("Predicted Simulation")
+
+    if st.session_state.predicted_data is not None:
+        try:
+            # Convert temperature columns to Celsius
+            predicted_data_celsius = st.session_state.predicted_data.copy()
+            temp_columns = [col for col in predicted_data_celsius.columns if col.startswith("TempState")]
+            for col in temp_columns:
+                predicted_data_celsius[col] = predicted_data_celsius[col] - 273
+
+            # Plot predicted data for the selected state
+            selected_temp_column = f"TempState{st.session_state.state_number}"
+            fig_predicted = px.scatter(
+                predicted_data_celsius,
+                x="X",
+                y="Y",
+                color=selected_temp_column,
+                color_continuous_scale="RdYlGn_r",
+                labels={'color': 'Temp (°C)'},
+                title=f"Predicted Data (State {st.session_state.state_number})",
+                width=420,
+                height=800
+            )
+            fig_predicted.update_layout(
+                coloraxis_colorbar=dict(
+                    title="Temp (°C)",
+                    thickness=20,
+                    len=0.75
+                ),
+                xaxis_title="X Coordinate",
+                yaxis_title="Y Coordinate",
+                margin=dict(l=50, r=0, b=0, t=40)
+            )
+
+            # Define the temperature-to-fraction relationship
+            temp_to_fraction = {
+                548: 1, 551: 0.99, 560: 0.95, 566: 0.88, 569: 0.77, 570: 0.49,
+                577: 0.44, 582: 0.41, 589: 0.36, 593: 0.32, 601: 0.25, 610: 0.14,
+                612: 0.09, 613: 0
+            }
+
+            # Interpolate solid fraction for temperatures
+            def interpolate_fraction(temp):
+                if temp <= 548:
+                    return 1
+                elif temp >= 613:
+                    return 0
+                else:
+                    # Perform linear interpolation
+                    sorted_temps = sorted(temp_to_fraction.keys())
+                    for i in range(len(sorted_temps) - 1):
+                        t1, t2 = sorted_temps[i], sorted_temps[i + 1]
+                        if t1 <= temp <= t2:
+                            f1, f2 = temp_to_fraction[t1], temp_to_fraction[t2]
+                            return f1 + (f2 - f1) * (temp - t1) / (t2 - t1)
+
+            predicted_data_celsius['Solid Fraction'] = predicted_data_celsius[selected_temp_column].apply(interpolate_fraction)
+
+            # Plot solid fraction
+            fig_solid_fraction = px.scatter(
+                predicted_data_celsius,
+                x="X",
+                y="Y",
+                color="Solid Fraction",
+                color_continuous_scale="Blues",
+                labels={'color': 'Solid Fraction'},
+                title=f"Solid Fraction Distribution (State {st.session_state.state_number})",
+                width=420,
+                height=800
+            )
+            fig_solid_fraction.update_layout(
+                coloraxis_colorbar=dict(
+                    title="Solid Fraction",
+                    thickness=20,
+                    len=0.75
+                ),
+                xaxis_title="X Coordinate",
+                yaxis_title="Y Coordinate",
+                margin=dict(l=50, r=0, b=0, t=40)
+            )
+
+            # Display the plots side by side
+            empty_col1, col1, col2, empty_col2 = st.columns([1, 3, 3, 1])
+
+            with col1:
+                st.plotly_chart(fig_predicted, use_container_width=False, key="predicted_plot")
+
+            with col2:
+                st.plotly_chart(fig_solid_fraction, use_container_width=False, key="solid_fraction_plot")
+
+        except Exception as e:
+            st.error(f"Failed to display predicted simulation: {str(e)}")
+    else:
+        st.warning("No predicted data available for visualization")
     
 
 if __name__ == "__main__":
