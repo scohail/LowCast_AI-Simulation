@@ -1,7 +1,7 @@
 import h5py
 import pandas as pd
 
-file_path = "/home/scohail/Desktop/Script ProCAST to Excel/V_30_714.erfh5"
+file_path = "/home/scohail/Desktop/LowCast_AI-Simulation/Procast/Cube.erfh5"
 
 
 with h5py.File(file_path, "r") as f:
@@ -16,16 +16,16 @@ with h5py.File(file_path, "r") as f:
         else:
             print(f"'{key}' is a dataset with shape: {post_group[key].shape} and dtype: {post_group[key].dtype}")
     
-    first_state = f["post/constant/entityresults/NODE/COORDINATE/erfblock/res"]
+    first_state = f["post/constant/connectivities/TETRA4/erfblock/ic/"]
     
-    # List datasets/groups inside the first state
+    # List datasets/groups inside the first state/home/scohail/Desktop/LowCast_AI-Simulation/Data
 
     if isinstance(first_state  ,h5py.Group):
     
         print("Contents of 'state000000000051':", list(first_state.keys()))
     else:
         first_state = pd.DataFrame(first_state)
-        first_state.to_csv("/home/scohail/Desktop/Script ProCAST to Excel/teste/first_state.csv", index=False)
+        first_state.to_csv("/home/scohail/Desktop/LowCast_AI-Simulation/Cube.csv", index=False)
 
         print("Contents of 'state000000000101':", first_state.head())   
 
@@ -43,7 +43,8 @@ post/singlestate/state000000000681/entityresults/NODE/Fraction Solid/ZONE1_set1/
 post/multistate/multientityresults/MODEL/Fraction_Solid/ZONE1_set1/erfblock
 
 
+/post/constant/entityresults/NODE/COORDINATE/erfblock/res
 
-
+post/constant/connectivities/TETRA4/erfblock/ic/
 
 '''

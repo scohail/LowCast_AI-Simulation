@@ -9,6 +9,7 @@ from Modules.prediction import Prepare_data, Compute_error, Predict_temp
 
 # Your existing functions here (Prepare_data, Compute_error, Predict_temp)
 def main():
+    st.set_page_config(layout="wide")
     st.title("2D Error Distribution Visualization")
     
     # Initialize session state
@@ -22,7 +23,7 @@ def main():
         
         # Temperature slider
         temp_int = st.slider(
-            "Select Temperature (K)",
+            "Select Temperature (°C)",
             min_value=614,
             max_value=720,
             value=614,
@@ -59,7 +60,7 @@ def main():
 
     # Visualization
     if st.session_state.error_data is not None:
-        st.header(f"Error Distribution - {temp_int}K, State {state_number}")
+        st.header(f"Error Distribution - {temp_int}°C, State {state_number}")
         
         error_column = f"TempState{state_number}"
         
@@ -70,26 +71,40 @@ def main():
                 y="Y",
                 color=error_column,
                 color_continuous_scale="RdYlGn_r",
-                labels={'color': 'Error (K)'},
+                labels={'color': 'Error (°C)'},
                 title=f"Temperature Error Distribution",
-                width=800,
-                height=1000
+                width=420,
+                height=800
             )
             
             # Configure plot appearance
             fig.update_layout(
                 coloraxis_colorbar=dict(
-                    title="Error (K)",
+                    title="Error (°C)",
                     thickness=20,
                     len=0.75
                 ),
                 xaxis_title="X Coordinate",
                 yaxis_title="Y Coordinate",
-                margin=dict(l=0, r=0, b=0, t=40)
+                margin=dict(l=50, r=0, b=0, t=40)
             )
+
+
+            fig_1 = fig
+            fig_2 = fig
+
+            col1, col2, col3 = st.columns(3)
+
+            with col1:
+                st.plotly_chart(fig_1, use_container_width=False, key="plot1")
+
+            with col2:
+                st.plotly_chart(fig_2, use_container_width=False, key="plot2")
             
-            st.plotly_chart(fig)
+            with col3:
+                st.plotly_chart(fig, use_container_width=False, key="plot3")
             
+          
         except KeyError:
             st.error(f"State {state_number} not available in processed data")
     elif process_clicked:

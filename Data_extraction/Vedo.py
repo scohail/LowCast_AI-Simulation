@@ -4,7 +4,7 @@ import pandas as pd
 from vedo import Points, Plotter
 
 # Folder containing CSV files
-folder = "/home/scohail/Desktop/LowCast_AI-Simulation/Data_614C"
+folder = "/home/scohail/Desktop/LowCast_AI-Simulation/Data/test/"
 
 # Get list of state files
 state_files = sorted([os.path.join(folder, f) for f in os.listdir(folder) if f.endswith(".csv")])
@@ -15,7 +15,7 @@ coordinates = first_state[['X', 'Y', 'Z']].values
 
 # Create a Points object for visualization
 points = Points(coordinates)
-points.pointdata["Temperature"] = np.zeros(len(coordinates))  # Placeholder for temperature values
+points.pointdata["Fraction Solid"] = np.zeros(len(coordinates))  # Placeholder for temperature values
 
 # Initialize the plotter
 plt = Plotter(bg='white')
@@ -26,10 +26,10 @@ plt.add(points)
 # Function to update the points for each state
 def update_state(state_file):
     data = pd.read_csv(state_file)
-    temperatures = data['Temperature(K)'].values
+    temperatures = data['Fraction Solid'].values
 
     # Update the points with new temperature values
-    points.pointdata["Temperature"] = temperatures
+    points.pointdata["Fraction Solid"] = temperatures
     points.cmap("coolwarm", "Temperature")  # Apply a colormap
     plt.render()  # Force an update to refresh the scene
 

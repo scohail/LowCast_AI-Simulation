@@ -96,7 +96,7 @@ def Predict_temp(Topredict_Data):
     print('loading the model and the scaler')
 
     scaler = load('/home/scohail/Desktop/LowCast_AI-Simulation/Scaler/scaler_2_1.pkl')
-    model = load_model('/home/scohail/Desktop/LowCast_AI-Simulation/Models/First_model_5.h5')
+    model = load_model('/home/scohail/Desktop/LowCast_AI-Simulation/Models/Last_model2_5.h5')
 
     Transformed_Data = Topredict_Data.copy()
 
